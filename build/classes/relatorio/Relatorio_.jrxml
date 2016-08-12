@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Relatorio_" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="total" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new Integer(1)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dtinicio" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new Integer(2)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dtfim" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new Integer(3)]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+  C.CD_SETOR
+ ,S.NM_SETOR
+ ,C.DT_ATENDIMENTO
+ ,C.QT_ATEND
+
+FROM
+    DBAMV.CT_ATEND C
+   ,DBAMV.SETOR_HAM S
+WHERE
+    C.DT_ATENDIMENTO BETWEEN $P{dtinicio} AND $P{dtfim}
+ AND S.CD_SETOR = C.CD_SETOR
+ORDER BY C.DT_ATENDIMENTO]]>
+	</queryString>
+	<field name="CD_SETOR" class="java.math.BigDecimal"/>
+	<field name="NM_SETOR" class="java.lang.String"/>
+	<field name="DT_ATENDIMENTO" class="java.sql.Timestamp"/>
+	<field name="QT_ATEND" class="java.math.BigDecimal"/>
+	<variable name="soma" class="java.math.BigDecimal" resetType="Group" resetGroup="ATEN" calculation="Sum">
+		<variableExpression><![CDATA[$F{QT_ATEND}]]></variableExpression>
+	</variable>
+	<group name="ATEN">
+		<groupExpression><![CDATA[$F{DT_ATENDIMENTO}]]></groupExpression>
+		<groupHeader>
+			<band height="59">
+				<textField pattern="dd/MM/yyyy">
+					<reportElement x="10" y="3" width="100" height="20"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{DT_ATENDIMENTO}]]></textFieldExpression>
+				</textField>
+				<rectangle>
+					<reportElement x="0" y="29" width="81" height="30"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="10" y="39" width="60" height="20"/>
+					<textElement/>
+					<text><![CDATA[Código]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="81" y="29" width="293" height="30"/>
+				</rectangle>
+				<rectangle>
+					<reportElement x="374" y="29" width="126" height="30"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="94" y="39" width="60" height="20"/>
+					<textElement/>
+					<text><![CDATA[Setor]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="384" y="39" width="116" height="20"/>
+					<textElement/>
+					<text><![CDATA[Data de Atendimento]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="500" y="29" width="72" height="30"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="504" y="39" width="60" height="20"/>
+					<textElement/>
+					<text><![CDATA[Quantidade]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="33">
+				<textField>
+					<reportElement x="514" y="8" width="58" height="20"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{soma}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="414" y="8" width="100" height="20"/>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[SubTotal:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="42" y="10" width="509" height="35"/>
+				<textElement textAlignment="Center">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Relatório de Quantidade de Atendimento]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<textField>
+				<reportElement x="444" y="15" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="524" y="15" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="59" splitType="Stretch">
+			<textField>
+				<reportElement x="23" y="3" width="402" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Data Inicial: "+$P{dtinicio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="23" y="23" width="402" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Data Final: "+$P{dtfim}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="81" height="30"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="81" y="0" width="293" height="30"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="374" y="0" width="126" height="30"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="500" y="0" width="72" height="30"/>
+			</rectangle>
+			<textField>
+				<reportElement x="92" y="10" width="282" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NM_SETOR}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="384" y="10" width="116" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{DT_ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="514" y="10" width="58" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{QT_ATEND}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="12" y="10" width="46" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CD_SETOR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch">
+			<staticText>
+				<reportElement x="336" y="10" width="150" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total de Atendimentos ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="486" y="10" width="86" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="23" y="34" width="382" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
